@@ -25,23 +25,42 @@ function Search() {
   };
 
   useEffect(() => {
-    let resValue = [];
+    let resValue;
     let mt = "";
     if (searchinput == mt) {
       resValue = [];
     } else {
       resValue = dataSet.filter((ele) => {
-        console.log(ele.name.toLowerCase());
-
         return (
           ele.name.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.nickname.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.contact.toString().includes(searchinput)
-        );
-      });
+          );
+        });
+       
+        // let index = resValue.findIndex(ele => ele.name.toLowerCase() === searchinput.toLowerCase())
+        // console.log(index)
     }
+ 
     setsuggestion(resValue);
   }, [searchinput]);
+  
+    function handleDelete(index) {
+
+      
+      const updatedDataSet = [...dataSet];
+
+      updatedDataSet.splice(index, 1); 
+    
+      
+      window.localStorage.setItem("phNum_info", JSON.stringify(updatedDataSet));
+    
+      
+      setsuggestion(updatedDataSet);
+    }
+    
+
+
 
   return (
     <div className="userSearch">
@@ -58,11 +77,12 @@ function Search() {
       </div>
 
       <ul>
-        {suggestion.map((ele) => (
-          <li>
+        {suggestion.map((ele, ind) => (
+          <li key={ind}>
             <div>{ele.name}</div>
             <div>{ele.nickname}</div>
             <div>{ele.contact}</div>
+            <div className="delete_btn" onClick={() => handleDelete(ind)}>Delete</div>
           </li>
         ))}
       </ul>
@@ -73,7 +93,7 @@ function Search() {
 function AddContact(props) {
   let { userdata, update } = props;
 
-  // const [contactSaved, setcontactSaved] = useState("");
+  const [contactSaved, setcontactSaved] = useState("");
 
   const handleuserinput = (e) => {
     const { name, value } = e.target;
@@ -88,16 +108,16 @@ function AddContact(props) {
       JSON.parse(window.localStorage.getItem("phNum_info")) || [];
     existingData.push(userdata);
     window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
-    // alert("Contact Saved");
-    // setcontactSaved("Contact Saved");
-    // setTimeout(() => {
-    //   setcontactSaved("");
-    // }, 3000);
-    // update({
-    //   name: "",
-    //   nickname: "",
-    //   contact: "",
-    // });
+    alert("Contact Saved");
+    setcontactSaved("Contact Saved ✅");
+    setTimeout(() => {
+      setcontactSaved("");
+    }, 3000);
+    update({
+      name: "",
+      nickname: "",
+      contact: "",
+    });
   };
 
   return (
@@ -134,7 +154,7 @@ function AddContact(props) {
           Add
         </button>
       </form>
-      <h1></h1>
+      <h1 className="acknowledge">{contactSaved}</h1>
     </div>
   );
 }

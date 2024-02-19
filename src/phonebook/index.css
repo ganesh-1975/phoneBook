@@ -79,3 +79,18 @@ form input{
     border-radius: 12px;
     cursor: pointer;
 }
+
+.delete_btn{
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    padding: 14px 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.acknowledge{
+    color: rgb(2, 224, 2);
+}
