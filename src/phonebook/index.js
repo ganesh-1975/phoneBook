@@ -2,11 +2,7 @@ import "./index.css";
 import { useState, useEffect } from "react";
 
 function PhoneBook() {
-  const userdata = {
-    name: "Varun",
-    nickname: "varun nickname",
-    contact: 5964621536,
-  };
+  const userdata = {};
 
   const [data, setdata] = useState(userdata);
 
@@ -29,21 +25,20 @@ function Search() {
   };
 
   useEffect(() => {
-    let resValue = []
+    let resValue = [];
     let mt = "";
     if (searchinput == mt) {
       resValue = [];
     } else {
-       resValue = dataSet.filter((ele) => {
-         console.log(ele.contact)
-         
+      resValue = dataSet.filter((ele) => {
+        console.log(ele.name.toLowerCase());
+
         return (
           ele.name.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.nickname.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.contact.toString().includes(searchinput)
-          
-          );
-        });
+        );
+      });
     }
     setsuggestion(resValue);
   }, [searchinput]);
@@ -78,21 +73,31 @@ function Search() {
 function AddContact(props) {
   let { userdata, update } = props;
 
+  // const [contactSaved, setcontactSaved] = useState("");
+
   const handleuserinput = (e) => {
     const { name, value } = e.target;
     update((olddata) => {
-      return {...olddata, [name]: value };
+      return { ...olddata, [name]: value };
     });
   };
 
   const handlebutton = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const existingData =
       JSON.parse(window.localStorage.getItem("phNum_info")) || [];
-    // const newData = [];
-    // newData.push(...existingData, userdata);
-    existingData.push(userdata)
+    existingData.push(userdata);
     window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
+    // alert("Contact Saved");
+    // setcontactSaved("Contact Saved");
+    // setTimeout(() => {
+    //   setcontactSaved("");
+    // }, 3000);
+    // update({
+    //   name: "",
+    //   nickname: "",
+    //   contact: "",
+    // });
   };
 
   return (
@@ -116,8 +121,9 @@ function AddContact(props) {
           onChange={handleuserinput}
         />
         <input
-          type="number"
+          type="tel"
           minLength={10}
+          maxLength={12}
           name="contact"
           placeholder="Contact Number"
           value={userdata.contact}
@@ -128,6 +134,7 @@ function AddContact(props) {
           Add
         </button>
       </form>
+      <h1></h1>
     </div>
   );
 }
