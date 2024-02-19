@@ -29,15 +29,24 @@ function Search() {
   };
 
   useEffect(() => {
-    const resValue = dataSet.filter((ele) => {
-      return (
-        ele.name.toLowerCase().includes(searchinput.toLowerCase()) ||
-        ele.nickname.toLowerCase().includes(searchinput.toLowerCase()) ||
-        ele.contact.includes(searchinput)
-      );
-    });
+    let resValue = []
+    let mt = "";
+    if (searchinput == mt) {
+      resValue = [];
+    } else {
+       resValue = dataSet.filter((ele) => {
+         console.log(ele.contact)
+         
+        return (
+          ele.name.toLowerCase().includes(searchinput.toLowerCase()) ||
+          ele.nickname.toLowerCase().includes(searchinput.toLowerCase()) ||
+          ele.contact.toString().includes(searchinput)
+          
+          );
+        });
+    }
     setsuggestion(resValue);
-  }, [searchinput, dataSet]);
+  }, [searchinput]);
 
   return (
     <div className="userSearch">
@@ -49,7 +58,7 @@ function Search() {
           onChange={handlesearchinput}
         />
         <button type="submit">
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <i className="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
 
@@ -72,27 +81,30 @@ function AddContact(props) {
   const handleuserinput = (e) => {
     const { name, value } = e.target;
     update((olddata) => {
-      return { ...olddata, [name]: value };
+      return {...olddata, [name]: value };
     });
   };
 
-  const handlebutton = () => {
+  const handlebutton = (e) => {
+    e.preventDefault()
     const existingData =
       JSON.parse(window.localStorage.getItem("phNum_info")) || [];
-    const newData = [];
-    newData.push(...existingData, userdata);
-    window.localStorage.setItem("phNum_info", JSON.stringify(newData));
+    // const newData = [];
+    // newData.push(...existingData, userdata);
+    existingData.push(userdata)
+    window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
   };
 
   return (
     <div className="ph_form">
-      <form>
+      <form onSubmit={handlebutton}>
         <h1>Add Contact</h1>
         <input
           type="text"
           name="name"
           placeholder="Name"
           value={userdata.name}
+          required
           onChange={handleuserinput}
         />
         <input
@@ -100,16 +112,19 @@ function AddContact(props) {
           name="nickname"
           placeholder="NickName"
           value={userdata.nickname}
+          required
           onChange={handleuserinput}
         />
         <input
-          type="text"
+          type="number"
+          minLength={10}
           name="contact"
           placeholder="Contact Number"
           value={userdata.contact}
+          required
           onChange={handleuserinput}
         />
-        <button className="btn" onClick={handlebutton}>
+        <button type="submit" className="btn">
           Add
         </button>
       </form>
