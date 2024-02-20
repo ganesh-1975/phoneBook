@@ -17,6 +17,7 @@ function PhoneBook() {
 function Search() {
   const [searchinput, setsearchinput] = useState("");
   const [suggestion, setsuggestion] = useState([]);
+  const [contactDeleted, setcontactDeleted] = useState("");
 
   let dataSet = JSON.parse(window.localStorage.getItem("phNum_info"));
 
@@ -35,32 +36,33 @@ function Search() {
           ele.name.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.nickname.toLowerCase().includes(searchinput.toLowerCase()) ||
           ele.contact.toString().includes(searchinput)
-          );
-        });
-       
-        // let index = resValue.findIndex(ele => ele.name.toLowerCase() === searchinput.toLowerCase())
-        // console.log(index)
+        );
+      });
+
+      // let index = resValue.findIndex(ele => ele.name.toLowerCase() === searchinput.toLowerCase())
+      // console.log(index)
     }
- 
+
     setsuggestion(resValue);
   }, [searchinput]);
-  
-    function handleDelete(index) {
 
-      
+  function handleDelete(index) {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (confirmDelete) {
       const updatedDataSet = [...dataSet];
 
-      updatedDataSet.splice(index, 1); 
-    
-      
+      updatedDataSet.splice(index, 1);
+
       window.localStorage.setItem("phNum_info", JSON.stringify(updatedDataSet));
-    
-      
+
+      setcontactDeleted("Contact Deleted ❌");
+      setTimeout(() => {
+        setcontactDeleted("");
+      }, 3000);
+
       setsuggestion(updatedDataSet);
     }
-    
-
-
+  }
 
   return (
     <div className="userSearch">
@@ -72,17 +74,29 @@ function Search() {
           onChange={handlesearchinput}
         />
         <button type="submit">
-          <i className="fa-solid fa-magnifying-glass"></i>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className="bi bi-search"
+            viewBox="0 0 16 16"
+          >
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+          </svg>
         </button>
       </div>
 
+      <h3 className="acknowlegeForDelete">{contactDeleted}</h3>
       <ul>
         {suggestion.map((ele, ind) => (
           <li key={ind}>
             <div>{ele.name}</div>
             <div>{ele.nickname}</div>
             <div>{ele.contact}</div>
-            <div className="delete_btn" onClick={() => handleDelete(ind)}>Delete</div>
+            <div className="delete_btn" onClick={() => handleDelete(ind)}>
+              Delete
+            </div>
           </li>
         ))}
       </ul>
@@ -106,18 +120,24 @@ function AddContact(props) {
     e.preventDefault();
     const existingData =
       JSON.parse(window.localStorage.getItem("phNum_info")) || [];
-    existingData.push(userdata);
-    window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
-    alert("Contact Saved");
-    setcontactSaved("Contact Saved ✅");
-    setTimeout(() => {
-      setcontactSaved("");
-    }, 3000);
-    update({
-      name: "",
-      nickname: "",
-      contact: "",
-    });
+      const contactExist = existingData.some(ele => ele.contact == userdata.contact)
+      if(contactExist){
+        alert('the conctact already saved')
+      }else{
+        existingData.push(userdata);
+        window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
+        alert("Contact Saved");
+        setcontactSaved("Contact Saved ✅");
+        setTimeout(() => {
+          setcontactSaved("");
+        }, 3000);
+        update({
+          name: "",
+          nickname: "",
+          contact: "",
+        });
+
+      }
   };
 
   return (
@@ -143,7 +163,7 @@ function AddContact(props) {
         <input
           type="tel"
           minLength={10}
-          maxLength={12}
+          maxLength={13}
           name="contact"
           placeholder="Contact Number"
           value={userdata.contact}

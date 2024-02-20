@@ -94,3 +94,8 @@ form input{
 .acknowledge{
     color: rgb(2, 224, 2);
 }
+
+.acknowlegeForDelete{
+    color: red;
+    text-align: center;
+}
