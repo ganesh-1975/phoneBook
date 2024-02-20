@@ -28,7 +28,7 @@ function Search() {
   useEffect(() => {
     let resValue;
     let mt = "";
-    if (searchinput == mt) {
+    if (searchinput === mt) {
       resValue = [];
     } else {
       resValue = dataSet.filter((ele) => {
@@ -120,7 +120,7 @@ function AddContact(props) {
     e.preventDefault();
     const existingData =
       JSON.parse(window.localStorage.getItem("phNum_info")) || [];
-      const contactExist = existingData.some(ele => ele.contact == userdata.contact)
+      const contactExist = existingData.some(ele => ele.contact === userdata.contact)
       if(contactExist){
         alert('the conctact already saved')
       }else{
