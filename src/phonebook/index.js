@@ -58,7 +58,7 @@ function Search() {
       setcontactDeleted("Contact Deleted ❌");
       setTimeout(() => {
         setcontactDeleted("");
-      }, 3000);
+      }, 2000);
 
       setsuggestion(updatedDataSet);
     }
@@ -118,26 +118,26 @@ function AddContact(props) {
 
   const handlebutton = (e) => {
     e.preventDefault();
-    const existingData =
-      JSON.parse(window.localStorage.getItem("phNum_info")) || [];
-      const contactExist = existingData.some(ele => ele.contact === userdata.contact)
-      if(contactExist){
-        alert('the conctact already saved')
-      }else{
-        existingData.push(userdata);
-        window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
-        alert("Contact Saved");
-        setcontactSaved("Contact Saved ✅");
-        setTimeout(() => {
-          setcontactSaved("");
-        }, 3000);
-        update({
-          name: "",
-          nickname: "",
-          contact: "",
-        });
-
-      }
+    const existingData = JSON.parse(window.localStorage.getItem("phNum_info")) || [];
+    const contactExist = existingData.some(
+      (ele) => ele.contact === userdata.contact
+    );
+    if (contactExist) {
+      alert("the conctact already saved");
+    } else {
+      existingData.push(userdata);
+      window.localStorage.setItem("phNum_info", JSON.stringify(existingData));
+      alert("Contact Saved");
+      setcontactSaved("Contact Saved ✅");
+      setTimeout(() => {
+        setcontactSaved("");
+      }, 2000);
+      update({
+        name: "",
+        nickname: "",
+        contact: "",
+      });
+    }
   };
 
   return (

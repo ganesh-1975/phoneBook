@@ -99,3 +99,15 @@ form input{
     color: red;
     text-align: center;
 }
+
+@media only screen and (max-width: 550px) {
+    .wrapper{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .userSearch{
+        padding: 20px;
+        border: none;
+    }
+}
